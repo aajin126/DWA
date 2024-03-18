@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!--include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find former_gazebo)/worlds/small_house.world"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="paused" value="false"/>
+    <arg name="gui" value="true"/>
+    <arg name="debug" value="false"/>
+  </include-->
+
+  <include file="$(find former_description)/launch/description_gazebo.launch"/>
+
+  <!-- Spawn the former in gazebo -->
+  <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner" output="screen" 
+        args="-urdf -model former -param robot_description -z 0.5"/>
+
+  <!-- Load the former base controllers -->
+  <rosparam file="$(find former_control)/config/control.yaml" command="load"/>
+
+  <node pkg="controller_manager" type="spawner" name="controller_spawner" output="screen" 
+        args="former_base_controller former_joint_state_controller"/>
+
+</launch>
